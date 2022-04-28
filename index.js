@@ -67,7 +67,7 @@ app.post("/users/", async (request, response) => {
 });
 // app.post("/users/", async (req, res) => {
 //   const { username, password, name, gender, location } = req.body;
-//   const checkUserQuery = `SELECT * FROM user WHERE username="${username}";`;
+//   const checkUserQuery = `SELECT * FROM user ;`;
 //   try {
 //     const dbUser = await db.get(checkUserQuery);
 //     const salt = await bcrypt.genSalt(10);
@@ -137,3 +137,29 @@ app.post("/login", async (request, response) => {
 //     res.send("Invalid");
 //   }
 // });
+
+//All Users
+app.get("/users/", async (req, res) => {
+  const usersQuery = `SELECT * FROM user ;`;
+  const users = await db.all(usersQuery);
+  res.status(200).send(users);
+});
+
+//remove User
+app.delete("/:userID", async (imp, exp) => {
+  const { userID } = imp.params;
+  const getUserQuery = `SELECT * FROM user WHERE username="${userID}"`;
+  try {
+    const dbUser = await db.get(getUserQuery);
+    console.log(dbUser);
+    if (!dbUser) {
+      throw Error("user Not found");
+    } else {
+      const deleteQuery = `DELETE FROM user WHERE username="${userID}";`;
+      await db.run(deleteQuery);
+      exp.status(200).send("Removed Successfully");
+    }
+  } catch (error) {
+    exp.status(400).send(error.message);
+  }
+});

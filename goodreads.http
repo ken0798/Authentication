@@ -21,3 +21,9 @@ Content-Type: application/json
     "username":"rahul123",
     "password": "rahul@456"
 }
+
+### 
+DELETE  http://localhost:3000/rahul123
+
+###
+GET http://localhost:3000/users/
